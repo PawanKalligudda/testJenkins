@@ -2,9 +2,6 @@ pipeline {
     agent any
     stages {
         stage('Testing & Source Scans') {
-            when {
-                branch 'main'               
-            }
             parallel {
                 stage('Run Test Script') {
                     steps {
