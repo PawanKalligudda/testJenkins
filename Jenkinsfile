@@ -68,6 +68,18 @@ pipeline {
                         '''
                     }
                 }
+                stage('SonarQube') {
+                    steps {
+                        sh '''
+                            docker run --rm -v $(pwd):/workspace -w /workspace python:3.11 bash -c "
+                            dnf install -y openjdk-17-jdk wget unzip
+                            export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+                            export PATH=$JAVA_HOME/bin:$PATH
+                            java -version
+                            "
+                        '''
+                    }
+                }
             }
         }
     }
