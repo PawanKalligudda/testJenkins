@@ -58,6 +58,16 @@ pipeline {
                         '''
                     }
                 }
+                stage('Detect Secrets') {
+                    steps {
+                        sh '''
+                            docker run --rm -v $(pwd):/workspace -w /workspace python:3.11 bash -c "
+                            pip install detect-secrets
+                            #detect-secrets scan > detect-secrets-results.json
+                            "
+                        '''
+                    }
+                }
             }
         }
     }
