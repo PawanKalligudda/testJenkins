@@ -1,10 +1,5 @@
 pipeline {
-    agent { 
-        docker { 
-            image 'python:3.11'
-            args '-u root:root'
-        } 
-    }
+    agent any
     stages {
         stage('Testing & Source Scans') {
             when {
@@ -17,10 +12,12 @@ pipeline {
                 stage('Run Test Script') {
                     steps {
                         sh '''
+                            docker run --rm -v $(pwd):/workspace -w /workspace python:3.11 bash -c "
                             echo "Starting backend tests..."
                             echo "backend test is running"
                             sleep 300
                             echo "backedn test finished"
+                            "
                         '''
                     }
                 }
@@ -28,29 +25,32 @@ pipeline {
                 stage('Run Trivy Scan') {
                     steps {
                         sh '''
-                           sh '''
+                            docker run --rm -v $(pwd):/workspace -w /workspace python:3.11 bash -c "
                             echo "Starting trivy scans..."
                             echo "Trivy scans are running"
                             sleep 300
                             echo "Trivy scans finished"
-                        '''
+                            "
                         '''
                     }
                 }
                 stage('Run Detect Secrets') {
                     steps {
                         sh '''
+                            docker run --rm -v $(pwd):/workspace -w /workspace python:3.11 bash -c "
                             echo "Installing detect-secrets..."
                             pip install detect-secrets
                             sleep 300
                             echo "Running detect-secrets scan..."
                             # detect-secrets scan > $output_file  # Uncomment when read
+                            "
                         '''
                     }
                 }
                 stage('Run SonarQube') {
                     steps {
                         sh '''
+                            docker run --rm -v $(pwd):/workspace -w /workspace python:3.11 bash -c "
                             echo "Installing SonarQube scanner dependencies..."
                             dnf update -qy && dnf install -y wget git unzip openjdk-17-jdk
 
@@ -60,6 +60,7 @@ pipeline {
 
                             echo "Running SonarQube analysis..."
                             # sonar-scanner -Dsonar.projectKey=myproject -Dsonar.sources=.  # Uncomment when ready
+                            "
                         '''
                     }
                 }
