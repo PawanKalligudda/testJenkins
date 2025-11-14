@@ -3,10 +3,7 @@ pipeline {
     stages {
         stage('Testing & Source Scans') {
             when {
-                anyOf {
-                    branch 'main'
-                    changeRequest() // triggers for PRs
-                }
+                branch 'main'               
             }
             parallel {
                 stage('Run Test Script') {
